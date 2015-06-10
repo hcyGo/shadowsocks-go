@@ -1,4 +1,4 @@
-# shadowsocks-go
+# shadowsocks-go with udp relay server support
 
 Current version: 1.1.4 [![Build Status](https://travis-ci.org/shadowsocks/shadowsocks-go.png?branch=master)](https://travis-ci.org/shadowsocks/shadowsocks-go)
 
@@ -9,6 +9,10 @@ The protocol is compatible with the origin shadowsocks (if both have been upgrad
 **Note `server_password` option syntax changed in 0.6.2, the client now connects to servers in the order specified in the config.**
 
 **Please develop on the latest develop branch if you want to send pull request.**
+
+**To enable UDP server download the binary in the release tab, or change the repo address server.go imported and compile. Use `-u` parameter with server to enable the feature.**
+
+**UDP feature has not yet been tested tightly. Welcome to report bugs.**
 
 # Install
 
