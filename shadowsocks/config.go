@@ -36,6 +36,7 @@ type Config struct {
 }
 
 var readTimeout time.Duration
+var udpTimeout time.Duration
 
 func (config *Config) GetServerArray() []string {
 	// Specifying multiple servers in the "server" options is deprecated.
@@ -85,6 +86,7 @@ func ParseConfig(path string) (config *Config, err error) {
 		return nil, err
 	}
 	readTimeout = time.Duration(config.Timeout) * time.Second
+	udpTimeout = time.Duration(config.Timeout) * time.Second
 	return
 }
 
@@ -130,4 +132,5 @@ func UpdateConfig(old, new *Config) {
 
 	old.Timeout = new.Timeout
 	readTimeout = time.Duration(old.Timeout) * time.Second
+	udpTimeout = time.Duration(old.Timeout) * time.Second
 }
