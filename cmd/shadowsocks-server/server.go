@@ -5,8 +5,8 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	ss "github.com/hcyGo/shadowsocks-go/shadowsocks"
 	"io"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
@@ -15,6 +15,9 @@ import (
 	"strconv"
 	"sync"
 	"syscall"
+	"path/filepath"
+
+	ss "github.com/hcyGo/shadowsocks-go/shadowsocks"
 )
 
 var debug ss.DebugLog
@@ -171,7 +174,7 @@ type UDPListener struct {
 type PasswdManager struct {
 	sync.Mutex
 	portListener map[string]*PortListener
-	udpListener map[string]*UDPListener
+	udpListener  map[string]*UDPListener
 }
 
 func (pm *PasswdManager) add(port, password string, listener net.Listener) {
@@ -373,7 +376,7 @@ func main() {
 	var cmdConfig ss.Config
 	var printVer bool
 	var core int
-
+	var pid string
 
 	flag.BoolVar(&printVer, "version", false, "print version")
 	flag.StringVar(&configFile, "c", "config.json", "specify config file")
@@ -384,6 +387,7 @@ func main() {
 	flag.IntVar(&core, "core", 0, "maximum number of CPU cores to use, default is determinied by Go runtime")
 	flag.BoolVar((*bool)(&debug), "d", false, "print debug message")
 	flag.BoolVar(&udp, "u", false, "UDP Relay")
+	flag.StringVar(&pid, "pid", "", "process id file path")
 	flag.Parse()
 
 	if printVer {
@@ -416,6 +420,10 @@ func main() {
 	}
 	if core > 0 {
 		runtime.GOMAXPROCS(core)
+	}
+	if pid != "" {
+		os.MkdirAll(filepath.Base(pid),666)		
+		ioutil.WriteFile(pid,[]byte(strconv.Itoa(os.Getpid())),666)	
 	}
 	for port, password := range config.PortPassword {
 		go run(port, password)
